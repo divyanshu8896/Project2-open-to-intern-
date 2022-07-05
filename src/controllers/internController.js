@@ -31,7 +31,7 @@ const createIntern = async function (req, res) {
                 return res.status(400).send({ status: false, msg: "Enter valid name" });
             }
         }else{
-          return res.status(400).send({ status: false, msg: "Enter valid name" });
+          return res.status(400).send({ status: false, msg: "Enter sahi name" });
         }
 
         if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
@@ -57,9 +57,7 @@ const createIntern = async function (req, res) {
         if (!getCollege) {
             return res.status(400).send({status: false, msg: "No college is listed with that College name"});
         }
-        if (getCollege.isDeleted == true) {
-            return res.status(400).send({status: false, msg: "Presently the college is not accepting any interns"});
-        }
+
 
         let result = {
             name: name,
@@ -69,8 +67,8 @@ const createIntern = async function (req, res) {
         };
 
         let internData = await internModel.create(result);
-        let updateData = await internModel.find(internData).select({ name: 1, email: 1, mobile: 1, collegeId: 1 });
-        res.status(201).send({status: true, msg: "Intern Created successfully",document: updateData});
+        let getData = await internModel.find(internData).select({ name: 1, email: 1, mobile: 1,isDeleted:1,_id:0, collegeId: 1 });
+        res.status(201).send({status: true, msg: "Intern Created successfully",document: getData});
     } catch (err) {
         res.status(500).send({ status: false, msg: err.message });
     }
